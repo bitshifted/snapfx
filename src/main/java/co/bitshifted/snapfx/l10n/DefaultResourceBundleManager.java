@@ -4,6 +4,8 @@ import co.bitshifted.snapfx.prefs.StringPreferenceEntry;
 import jakarta.inject.Inject;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -11,6 +13,8 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 public class DefaultResourceBundleManager implements ResourceBundleManager{
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DefaultResourceBundleManager.class);
 
     private final LocaleManager localeManager;
     private final Map<String, ObservableResourceBundle> cache;
@@ -25,7 +29,7 @@ public class DefaultResourceBundleManager implements ResourceBundleManager{
             @Override
             public void changed(ObservableValue<? extends String> observableValue, String s, String t1) {
                 var newLocale = localeManager.localeFromString(t1);
-                System.out.println("NEw locale: " + newLocale);
+                LOGGER.trace("Locale changed to {}", newLocale);
                 cache.entrySet().forEach(entry -> {
                     var newBundle = ResourceBundle.getBundle(entry.getKey(), newLocale);
                     entry.getValue().setResourceBundle(newBundle);

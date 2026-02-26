@@ -15,14 +15,10 @@ import co.bitshifted.snapfx.prefs.DefaultPreferenceManager;
 import co.bitshifted.snapfx.prefs.PreferenceManager;
 import co.bitshifted.snapfx.view.DefaultFxViewLoader;
 import co.bitshifted.snapfx.view.FxViewLoader;
-import co.bitshifted.snapfx.view.ViewCache;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
-import com.google.inject.matcher.Matchers;
-import com.google.inject.Inject;
 import com.google.inject.name.Names;
-import com.google.inject.spi.ProvisionListener;
 import javafx.scene.control.ComboBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,28 +33,25 @@ public class SnapFxGuiceModule extends AbstractModule {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SnapFxGuiceModule.class);
     private ApplicationConfig applicationConfig;
-    private final ViewCache viewCache;
 
     public SnapFxGuiceModule() {
-        this.viewCache = new ViewCache();
         this.applicationConfig = applicationConfig();
     }
 
     @Override
     protected final void configure() {
-        bind(ViewCache.class).toInstance(viewCache);
         bind(ApplicationConfig.class).toInstance(applicationConfig);
         bind(PreferenceManager.class).to(DefaultPreferenceManager.class).in(Scopes.SINGLETON);
         bind(FxViewLoader.class).to(DefaultFxViewLoader.class).in(Scopes.SINGLETON);
         bind(LocaleManager.class).to(DefaultLocaleManager.class).in(Scopes.SINGLETON);
         bind(ResourceBundleManager.class).to(DefaultResourceBundleManager.class).in(Scopes.SINGLETON);
+        bind(InstanceProvider.class).to(DefaultInstanceProvider.class).in(Scopes.SINGLETON);
         if(applicationConfig.eventBusEnabled()) {
             bind(EventBus.class).to(DefaultEVentBus.class).in(Scopes.SINGLETON);
         }
         if (applicationConfig.executorServiceEnabled()) {
             bind(ExecutorService.class).toInstance(applicationConfig.executorService());
         }
-
 
         // UI components and utils
         bind(new TypeLiteral<Consumer<ComboBox<Locale>>>(){})
@@ -78,11 +71,6 @@ public class SnapFxGuiceModule extends AbstractModule {
 
         // bind custom bindings
         customBindings();
-
-        // Bind a provision listener to run custom code on object creation
-        var listener = new ViewBindingListener();
-        requestInjection(listener);
-        bindListener(Matchers.any(), listener);
 
     }
 
@@ -144,7 +132,7 @@ public class SnapFxGuiceModule extends AbstractModule {
         var fields = model.getClass().getDeclaredFields();
         for(Field f : fields) {
             f.setAccessible(true);
-            var annotation = (ModelData)f.getAnnotation(ModelData.class);
+            var annotation = f.getAnnotation(ModelData.class);
             if(annotation == null) {
                 continue;
             }

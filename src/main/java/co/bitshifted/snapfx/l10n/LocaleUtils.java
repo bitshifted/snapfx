@@ -35,18 +35,4 @@ public final class LocaleUtils {
                         && loc.getVariant().equals(locale.getVariant()));
     }
 
-//    public static String localeDisplayString(Locale locale, List<Locale> supported) {
-//        if(supported.contains(locale)) {
-//            System.out.println("Locale supported: " + locale);
-//            return localeDisplayString(locale);
-//        } else {
-//            System.out.println("Locale not supported: " + locale);
-//            var opt = supported.stream().filter(loc -> locale.getLanguage().equals(loc.getLanguage())).findFirst();
-//            if(opt.isPresent()) {
-//                System.out.println("Found langfuage match: " + opt.get());
-//
-//            }
-//        }
-//        return null;
-//    }
 }

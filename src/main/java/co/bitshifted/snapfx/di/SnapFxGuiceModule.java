@@ -45,13 +45,13 @@ public class SnapFxGuiceModule extends AbstractModule {
         bind(FxViewLoader.class).to(DefaultFxViewLoader.class).in(Scopes.SINGLETON);
         bind(LocaleManager.class).to(DefaultLocaleManager.class).in(Scopes.SINGLETON);
         bind(ResourceBundleManager.class).to(DefaultResourceBundleManager.class).in(Scopes.SINGLETON);
+        bind(InstanceProvider.class).to(DefaultInstanceProvider.class).in(Scopes.SINGLETON);
         if(applicationConfig.eventBusEnabled()) {
             bind(EventBus.class).to(DefaultEVentBus.class).in(Scopes.SINGLETON);
         }
         if (applicationConfig.executorServiceEnabled()) {
             bind(ExecutorService.class).toInstance(applicationConfig.executorService());
         }
-
 
         // UI components and utils
         bind(new TypeLiteral<Consumer<ComboBox<Locale>>>(){})
@@ -132,7 +132,7 @@ public class SnapFxGuiceModule extends AbstractModule {
         var fields = model.getClass().getDeclaredFields();
         for(Field f : fields) {
             f.setAccessible(true);
-            var annotation = (ModelData)f.getAnnotation(ModelData.class);
+            var annotation = f.getAnnotation(ModelData.class);
             if(annotation == null) {
                 continue;
             }

@@ -31,7 +31,6 @@ public class DefaultLocaleManager implements LocaleManager {
             sb.append("_").append(defaultLocale.getVariant());
         }
         var localeString = sb.toString();
-        System.out.println("Locale string: " + localeString);
         return  preferenceManager.getStringPreferenceEntry(CURRENT_LOCALE_PREFERENCE_NAME, localeString);
     }
 

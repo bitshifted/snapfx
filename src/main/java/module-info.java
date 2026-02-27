@@ -14,6 +14,7 @@ module co.bitshifted.snapfx {
     exports co.bitshifted.snapfx.property;
     exports co.bitshifted.snapfx.process;
     exports co.bitshifted.snapfx.eventbus.internal to com.google.guice;
+    opens co.bitshifted.snapfx.di  to com.google.guice;
 
     requires java.base;
     requires java.prefs;

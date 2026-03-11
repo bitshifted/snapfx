@@ -13,6 +13,8 @@ import co.bitshifted.snapfx.l10n.ui.LocaleComboBoxInitializer;
 import co.bitshifted.snapfx.annotations.ModelData;
 import co.bitshifted.snapfx.prefs.DefaultPreferenceManager;
 import co.bitshifted.snapfx.prefs.PreferenceManager;
+import co.bitshifted.snapfx.process.DefaultProcessExecutor;
+import co.bitshifted.snapfx.process.ProcessExecutor;
 import co.bitshifted.snapfx.view.DefaultFxViewLoader;
 import co.bitshifted.snapfx.view.FxViewLoader;
 import com.google.inject.AbstractModule;
@@ -50,6 +52,8 @@ public class SnapFxGuiceModule extends AbstractModule {
             bind(EventBus.class).to(DefaultEVentBus.class).in(Scopes.SINGLETON);
         }
         if (applicationConfig.executorServiceEnabled()) {
+            bind(ProcessExecutor.class).to(DefaultProcessExecutor.class).in(Scopes.SINGLETON);
+            LOGGER.debug("Binding ExecutorService to instance provided by application config");
             bind(ExecutorService.class).toInstance(applicationConfig.executorService());
         }
 
